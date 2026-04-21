@@ -176,7 +176,13 @@ body.lang-en .cns-dim:hover{transform:translateX(4px)}
 .fort-item p{color:var(--text-dim);font-size:.76rem;line-height:1.6}
 
 /* ═══ GLYPH FIELD ═══ */
-#glyph-field{width:100%;height:520px;display:block;border-radius:20px;border:1px solid var(--border);background:rgba(2,10,18,.15);cursor:crosshair}
+#glyph-field{font-family:var(--mono);font-size:clamp(10px,1.4vw,14px);line-height:1.5;white-space:pre;color:var(--neural);padding:2rem 1rem;border:1px solid var(--border);border-radius:20px;background:rgba(2,10,18,.15);overflow-x:auto;overflow-y:hidden;text-align:center;-webkit-user-select:text;user-select:text;cursor:default;position:relative;z-index:2}
+#glyph-field span{display:inline-block;position:relative}
+#glyph-field .g-num{color:var(--neural-bright)}
+#glyph-field .g-str{color:var(--text-ghost)}
+#glyph-field .g-dot{color:rgba(0,200,255,.15)}
+#glyph-field .g-roof{color:var(--neural-dim)}
+#glyph-field ::selection{background:rgba(0,200,255,.25);color:#fff}
 
 /* ═══ CTA ═══ */
 .cta-section{text-align:center;padding:6rem 2rem;position:relative;z-index:2}
@@ -241,6 +247,7 @@ body.lang-ar .btn{font-weight:600}
 .nav-links.show{display:flex}
 .hamburger{display:block}
 #bloom-canvas{height:200px}
+#glyph-field{font-size:9px;padding:1rem .5rem}
 }
 </style>
 </head>
@@ -521,7 +528,7 @@ body.lang-ar .btn{font-weight:600}
         <span class="sec-tag">✦ <span class="ar">حقل الحروف</span><span class="en">Glyph Field</span></span>
         <div class="sec-divider"></div>
     </div>
-    <canvas id="glyph-field" class="reveal"></canvas>
+    <div id="glyph-field" class="reveal"></div>
 </section>
 
 <!-- CTA -->
@@ -779,81 +786,101 @@ function draw(){
 draw();
 })();
 
-// ═══ GLYPH FIELD — Scroll & Touch Reactive ASCII Constellation ═══
+// ═══ GLYPH FIELD — DOM Text Physics · Lunar Gravity · Selectable ═══
 (function(){
-const c=document.getElementById('glyph-field');if(!c)return;
-const ctx=c.getContext('2d');
-let bw,bh,t=0,scrollV=0,lastScr=scrollY;
-let ptr={x:-1,y:-1,on:false};
+var el=document.getElementById('glyph-field');if(!el)return;
 
-function rs(){const r=c.getBoundingClientRect();bw=r.width;bh=r.height;c.width=bw*devicePixelRatio;c.height=bh*devicePixelRatio;ctx.setTransform(devicePixelRatio,0,0,devicePixelRatio,0,0)}
-rs();addEventListener('resize',rs);
+// Japanese village — Pascal's triangle thatched roofs
+var lines=[
+'                                                              ',
+'                          1                                   ',
+'        1                1 1                1                 ',
+'       1 1              1 2 1              1 1                ',
+'      1 2 1            1 3 3 1            1 2 1               ',
+'     1 3 3 1          1 4 6 4 1          1 3 3 1              ',
+'    +--------+       +-----------+      +--------+            ',
+'    | o    o |       | o       o |      | o    o |            ',
+'    |        |       |           |      |        |            ',
+'    | |    | |       |  ||   ||  |      | |    | |            ',
+'    +--------+       +-----------+      +--------+            ',
+' .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  . ',
+'   .     .     .     .     .     .     .     .     .          ',
+];
 
-const AR='بتثجحخدذرزسشصضطظعغفقكلمنهويءةى';
-const MT='∑∫∂∇πΩ∞≡≈∝λμσφψΔθ∀∃∈∅∪∩';
-const CD='{}[]<>()+-*/=^&|~01234567';
-const N=380,LG=1.62/9.81;
-const ps=[];
-const GA=2*Math.PI/Math.pow((1+Math.sqrt(5))/2,2);
-
-for(var i=0;i<N;i++){
-    var th=i*GA,r=.38*Math.sqrt(i/N);
-    var fr=.04*Math.sin(th*5)*Math.cos(th*3);
-    var tx=.5+(r+fr)*Math.cos(th),ty=.5+(r+fr)*Math.sin(th)*.85;
-    var ring=Math.sqrt((tx-.5)*(tx-.5)+(ty-.5)*(ty-.5));
-    var cs=ring<.12?AR:ring<.25?MT:CD;
-    ps.push({ch:cs[Math.floor(Math.random()*cs.length)],tx:tx,ty:ty,
-        x:.5+(Math.random()-.5)*.08,y:.5+(Math.random()-.5)*.08,
-        vx:0,vy:0,sz:7+(1-ring/.4)*9,ba:.15+(1-ring/.4)*.45,
-        hu:185+ring*120,ph:Math.random()*6.28,ms:.7+Math.random()*.6,rt:0});
-}
-
-addEventListener('scroll',function(){scrollV+=(scrollY-lastScr)*.08;lastScr=scrollY});
-var gr=function(){return c.getBoundingClientRect()};
-c.addEventListener('mousemove',function(e){var r=gr();ptr.x=(e.clientX-r.left)/r.width;ptr.y=(e.clientY-r.top)/r.height;ptr.on=true});
-c.addEventListener('mouseleave',function(){ptr.on=false});
-c.addEventListener('touchmove',function(e){var r=gr();ptr.x=(e.touches[0].clientX-r.left)/r.width;ptr.y=(e.touches[0].clientY-r.top)/r.height;ptr.on=true},{passive:true});
-c.addEventListener('touchend',function(){ptr.on=false});
-
-function draw(){
-    ctx.clearRect(0,0,bw,bh);t+=.006;scrollV*=.92;
-
-    ctx.lineWidth=.4;
-    for(var i=0;i<ps.length;i+=3){var a=ps[i];
-        for(var j=i+3;j<ps.length;j+=3){var b=ps[j];
-            var ddx=(a.x-b.x)*bw,ddy=(a.y-b.y)*bh,d2=ddx*ddx+ddy*ddy;
-            if(d2<1600){ctx.beginPath();ctx.moveTo(a.x*bw,a.y*bh);ctx.lineTo(b.x*bw,b.y*bh);
-                ctx.strokeStyle='rgba(0,200,255,'+(0.04*(1-Math.sqrt(d2)/40))+')';ctx.stroke()}
+var chars=[];
+el.textContent='';
+for(var li=0;li<lines.length;li++){
+    var line=lines[li];
+    for(var ci=0;ci<line.length;ci++){
+        var ch=line[ci];
+        var s=document.createElement('span');
+        s.textContent=ch;
+        if(ch!==' '){
+            if(/[0-9]/.test(ch)) s.className='g-num';
+            else if(/[+\-|=]/.test(ch)) s.className='g-str';
+            else if(ch==='.'||ch==='o') s.className='g-dot';
+            else if(ch==='/'||ch==='\\') s.className='g-roof';
+        }
+        el.appendChild(s);
+        if(ch!==' '){
+            var obj={el:s,x:0,y:0,vx:0,vy:0,ph:Math.random()*6.28,ms:.7+Math.random()*.6};
+            chars.push(obj);
+            (function(o){s.addEventListener('mouseenter',function(){
+                o.vy-=.4+Math.random()*.3;o.vx+=(Math.random()-.5)*.25;
+            })})(obj);
         }
     }
-
-    for(var i=0;i<ps.length;i++){var p=ps[i];
-        var dx=p.tx-p.x,dy=p.ty-p.y;
-        var dist=Math.sqrt(dx*dx+dy*dy);
-        var k=.006+dist*.02;
-        p.vx+=dx*k;p.vy+=dy*k;
-        p.vy+=scrollV*.002*LG/p.ms;
-        p.vx+=scrollV*.0003*Math.sin(p.ph);
-        if(ptr.on){var mx=p.x-ptr.x,my=p.y-ptr.y,md=Math.sqrt(mx*mx+my*my);
-            if(md<.18&&md>.001){var f=Math.min(.0008/(md*md*p.ms),.015);
-                p.vx+=f*(mx/md);p.vy+=f*(my/md)}}
-        p.vx+=Math.sin(t+p.ph)*.00004;p.vy+=Math.cos(t*1.3+p.ph)*.00003;
-        p.vx*=.955;p.vy*=.955;p.x+=p.vx;p.y+=p.vy;
-        p.rt+=(p.vx+p.vy)*.5;
-        var px=p.x*bw,py=p.y*bh;
-        var alpha=p.ba*Math.max(.1,1-dist*4);
-        ctx.save();ctx.translate(px,py);ctx.rotate(p.rt*.3);
-        ctx.font='500 '+p.sz+'px Tajawal,sans-serif';
-        ctx.textAlign='center';ctx.textBaseline='middle';
-        ctx.fillStyle='hsla('+(p.hu+Math.sin(t+p.ph)*15)+',75%,65%,'+alpha+')';
-        ctx.fillText(p.ch,0,0);
-        if(dist<.04){ctx.fillStyle='hsla('+p.hu+',70%,60%,'+(alpha*.12)+')';
-            ctx.font='500 '+(p.sz*2)+'px Tajawal,sans-serif';ctx.fillText(p.ch,0,0)}
-        ctx.restore();
-    }
-    requestAnimationFrame(draw);
+    if(li<lines.length-1)el.appendChild(document.createElement('br'));
 }
-draw();
+
+var LG=1.62/9.81,scrollV=0,lastScr=scrollY,t=0;
+
+addEventListener('scroll',function(){scrollV+=(scrollY-lastScr)*.1;lastScr=scrollY});
+
+// Selection: characters float up in lunar gravity
+var selCD=false;
+document.addEventListener('selectionchange',function(){
+    var sel=window.getSelection();
+    if(!sel.rangeCount||sel.isCollapsed||selCD)return;
+    selCD=true;setTimeout(function(){selCD=false},80);
+    var range=sel.getRangeAt(0);
+    for(var i=0;i<chars.length;i++){
+        try{if(range.intersectsNode(chars[i].el)){
+            chars[i].vy-=.8+Math.random()*.5;
+            chars[i].vx+=(Math.random()-.5)*.4;
+        }}catch(e){}
+    }
+});
+
+// Touch repulsion
+var touchCD=false;
+el.addEventListener('touchmove',function(e){
+    if(touchCD)return;touchCD=true;setTimeout(function(){touchCD=false},50);
+    var tx=e.touches[0].clientX,ty=e.touches[0].clientY;
+    for(var i=0;i<chars.length;i++){
+        var c=chars[i],cr=c.el.getBoundingClientRect();
+        var dx=cr.left+cr.width/2-tx,dy=cr.top+cr.height/2-ty;
+        var d=Math.sqrt(dx*dx+dy*dy);
+        if(d<60&&d>1){var f=Math.min(1.2/(d*d)*60,.9);
+            c.vx+=(dx/d)*f;c.vy+=(dy/d)*f}
+    }
+},{passive:true});
+
+function update(){
+    t+=.008;scrollV*=.92;
+    for(var i=0;i<chars.length;i++){
+        var c=chars[i];
+        c.vx+=-c.x*.008;c.vy+=-c.y*.008;
+        c.vy+=scrollV*.012*LG/c.ms;
+        c.vx+=Math.sin(t+c.ph)*.002;c.vy+=Math.cos(t*1.3+c.ph)*.0015;
+        c.vx*=.94;c.vy*=.94;c.x+=c.vx;c.y+=c.vy;
+        if(Math.abs(c.x)>.05||Math.abs(c.y)>.05)
+            c.el.style.transform='translate('+c.x.toFixed(1)+'px,'+c.y.toFixed(1)+'px)';
+        else if(c.el.style.transform) c.el.style.transform='';
+    }
+    requestAnimationFrame(update);
+}
+update();
 })();
 
 // ═══ NAV ═══
