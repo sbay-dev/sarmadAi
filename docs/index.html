@@ -154,6 +154,7 @@ body.lang-en .cns-dim:hover{transform:translateX(4px)}
 
 /* ═══ REPOS ═══ */
 .repo-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.8rem}
+@media(min-width:900px){.repo-grid{grid-template-columns:repeat(2,1fr)}}
 .repo-card{background:linear-gradient(135deg,rgba(10,31,58,.7),rgba(4,16,32,.5));border:1px solid var(--border);border-radius:18px;padding:2rem;transition:all .4s;position:relative;overflow:hidden;text-decoration:none;color:var(--text);display:block}
 .repo-card:hover{border-color:var(--border-glow);transform:translateY(-4px);box-shadow:0 20px 60px rgba(0,200,255,.08)}
 .repo-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;opacity:0;transition:opacity .3s}
@@ -292,8 +293,8 @@ body.lang-ar .btn{font-weight:600}
             <span class="en">The first Arabic AI system using <strong>Multi-dimensional Cubic Neural Statistics (CNS)</strong> as semantic memory for multi-agent orchestration. Designed <strong>before the MTEB era</strong>, it encodes concepts in a 12-dimensional geometric space at only 83 MB.</span>
         </p>
         <div class="hero-actions">
-            <a href="https://github.com/sbay-dev/CNSEmbedding" target="_blank" class="btn btn-neural">🧠 <span class="ar">العقل — CNSEmbedding</span><span class="en">Brain — CNSEmbedding</span></a>
-            <a href="https://github.com/sbay-dev/MVCServerAI" target="_blank" class="btn btn-ghost">🤖 <span class="ar">الوكلاء — MVCServerAI</span><span class="en">Agents — MVCServerAI</span></a>
+            <a href="https://github.com/sbay-dev/sarmadAi/tree/main/src/Sarmad.CNS.Core" target="_blank" class="btn btn-neural">🧠 <span class="ar">النواة — CNS Core</span><span class="en">Core — CNS Core</span></a>
+            <a href="https://github.com/sbay-dev/sarmadAi/tree/main/src/Sarmad.DMPS" target="_blank" class="btn btn-ghost">🤖 <span class="ar">الوكلاء — DMPS</span><span class="en">Agents — DMPS</span></a>
         </div>
 
         <!-- BLOOM CIPHER CANVAS -->
@@ -402,7 +403,7 @@ body.lang-ar .btn{font-weight:600}
         <div class="feat reveal reveal-delay-1"><div class="feat-icon ic1">🧠</div><h3><span class="ar">بحث دلالي عربي</span><span class="en">Arabic Semantic Search</span></h3><p><span class="ar">تحويل أي مفهوم إلى متجه 768 بُعداً وإيجاد أقرب المفاهيم بدقة Cosine Similarity عالية</span><span class="en">Convert any concept to a 768-d vector and find nearest concepts with high Cosine Similarity</span></p></div>
         <div class="feat reveal reveal-delay-2"><div class="feat-icon ic2">🧊</div><h3><span class="ar">مكعبات إحصائية</span><span class="en">Statistical Cubes</span></h3><p><span class="ar">بنية CNS تمثّل الفضاء الدلالي كمكعبات إحصائية متعددة الأبعاد لتمثيل هندسي فريد للمعاني</span><span class="en">CNS structure represents semantic space as multi-dimensional statistical cubes for unique geometric meaning</span></p></div>
         <div class="feat reveal reveal-delay-3"><div class="feat-icon ic3">⚡</div><h3><span class="ar">83 ميجابايت فقط</span><span class="en">Only 83 MB</span></h3><p><span class="ar">21.7 مليون معامل مقابل المليارات في النماذج الكبرى — يعمل على أي جهاز حتى الهاتف</span><span class="en">21.7M parameters vs billions in large models — runs on any device including phones</span></p></div>
-        <div class="feat reveal reveal-delay-1"><div class="feat-icon ic4">🤖</div><h3><span class="ar">وكلاء متعددون</span><span class="en">Multi-Agent System</span></h3><p><span class="ar">MVCServerAI ينسّق وكلاء ذكاء اصطناعي متعددين يتشاركون ذاكرة CNS الدلالية الواحدة</span><span class="en">MVCServerAI orchestrates multiple AI agents sharing a single CNS semantic memory</span></p></div>
+        <div class="feat reveal reveal-delay-1"><div class="feat-icon ic4">🤖</div><h3><span class="ar">وكلاء متعددون</span><span class="en">Multi-Agent System</span></h3><p><span class="ar">DMPS ينسّق وكلاء ذكاء اصطناعي متعددين يتشاركون ذاكرة CNS الدلالية الواحدة</span><span class="en">DMPS orchestrates multiple AI agents sharing a single CNS semantic memory</span></p></div>
         <div class="feat reveal reveal-delay-2"><div class="feat-icon ic5">🕌</div><h3><span class="ar">مصمم للعربية</span><span class="en">Built for Arabic</span></h3><p><span class="ar">مدرّب على مفاهيم عربية حقيقية: عاطفية، روحية، فكرية، فنية — ليس ترجمة من الإنجليزية</span><span class="en">Trained on real Arabic concepts: emotional, spiritual, intellectual, artistic — not English translations</span></p></div>
         <div class="feat reveal reveal-delay-3"><div class="feat-icon ic6">📐</div><h3><span class="ar">Matryoshka Embeddings</span><span class="en">Matryoshka Embeddings</span></h3><p><span class="ar">أبعاد متعددة من متجه واحد: 64, 128, 256, 512, 768 — مرونة بين الدقة والسرعة</span><span class="en">Multiple dims from one vector: 64, 128, 256, 512, 768 — flexibility between accuracy and speed</span></p></div>
     </div>
@@ -439,7 +440,7 @@ body.lang-ar .btn{font-weight:600}
 
     <!-- AGENT ARCHITECTURE -->
     <div class="arch-diagram reveal">
-        <h3>🤖 MVCServerAI — <span class="ar">تنسيق الوكلاء</span><span class="en">Agent Orchestration</span></h3>
+        <h3>🤖 DMPS — <span class="ar">تنسيق الوكلاء</span><span class="en">Agent Orchestration</span></h3>
         <div class="arch-flow">
             <div class="arch-layer al1"><span class="ln">API / MCP</span><span class="ld">HTTP · WebSocket · MCP Protocol</span></div>
             <div class="arch-arrow"></div>
@@ -502,22 +503,35 @@ body.lang-ar .btn{font-weight:600}
 <!-- REPOS -->
 <section id="repos">
     <div class="sec-header reveal">
-        <span class="sec-tag"><span class="ar">📦 المستودعات</span><span class="en">📦 Repositories</span></span>
+        <span class="sec-tag"><span class="ar">📦 المصادر المفتوحة</span><span class="en">📦 Open Source</span></span>
         <div class="sec-divider"></div>
-        <h2><span class="ar">الكود المفتوح</span><span class="en">Open Source</span></h2>
+        <h2><span class="ar">مستودع علمي موحّد</span><span class="en">Unified Scientific Repository</span></h2>
+        <p><span class="ar">كل الواجهات العامة والأوراق العلمية في مستودع واحد — كل حقيقة مُثبتة بسطر كود</span><span class="en">All public interfaces and papers in one repository — every claim backed by a line of code</span></p>
     </div>
     <div class="repo-grid">
-        <a href="https://github.com/sbay-dev/CNSEmbedding" target="_blank" class="repo-card rc1 reveal reveal-delay-1">
-            <div class="rb">🧠 <span class="ar">العقل</span><span class="en">The Brain</span></div>
-            <h3>CNSEmbedding</h3>
-            <p><span class="ar">نموذج التضمين الدلالي — شبكة مكعبات إحصائية تحوّل المفاهيم العربية إلى متجهات 768 بُعداً. يدعم PyTorch و ONNX و Matryoshka Embeddings.</span><span class="en">Semantic embedding model — Cubic Neural Statistics converting Arabic concepts to 768-d vectors. Supports PyTorch, ONNX, and Matryoshka Embeddings.</span></p>
-            <div class="repo-stats"><span>PyTorch + ONNX</span><span>21.7M params</span><span>Apache-2.0</span></div>
+        <a href="https://github.com/sbay-dev/sarmadAi/tree/main/src/Sarmad.CNS.Core" target="_blank" class="repo-card rc1 reveal reveal-delay-1">
+            <div class="rb">🧠 <span class="ar">النواة</span><span class="en">Core</span></div>
+            <h3><span class="ar">CNS.Core — البنية الجوهرية</span><span class="en">CNS.Core — Kernel</span></h3>
+            <p><span class="ar">بنية بيانات العقد الدلالية، الفضاء N-البُعدي، التجزئة الحتمية، وكاشف الانحراف المفاهيمي بين الفضاءات المتعددة.</span><span class="en">Semantic node data structures, N-dimensional space, deterministic hashing, and cross-space concept drift detection.</span></p>
+            <div class="repo-stats"><span>CNSNode.cs</span><span>CNSSpace.cs</span><span>DriftDetector.cs</span></div>
         </a>
-        <a href="https://github.com/sbay-dev/MVCServerAI" target="_blank" class="repo-card rc2 reveal reveal-delay-2">
-            <div class="rb">🤖 <span class="ar">الوكلاء</span><span class="en">The Agents</span></div>
-            <h3>MVCServerAI</h3>
-            <p><span class="ar">نموذج لغوي متعدد الوكلاء عبر ذاكرة CNS دلالية. بنية MVC لتنسيق الوكلاء مع بروتوكول MCP و DMPS.</span><span class="en">Multi-agent language model via CNS semantic memory. MVC architecture for agent orchestration with MCP protocol and DMPS.</span></p>
-            <div class="repo-stats"><span>.NET · C#</span><span>MCP Protocol</span><span>Multi-Agent</span></div>
+        <a href="https://github.com/sbay-dev/sarmadAi/blob/main/src/Sarmad.CNS.Embedding/ICNSEmbeddingModel.cs" target="_blank" class="repo-card rc1 reveal reveal-delay-2">
+            <div class="rb">🔬 <span class="ar">التضمين</span><span class="en">Embedding</span></div>
+            <h3><span class="ar">CNS.Embedding — واجهة النموذج</span><span class="en">CNS.Embedding — Model Interface</span></h3>
+            <p><span class="ar">واجهة نموذج التضمين: 21.7M معامل، 768 بُعد، 4 طبقات Attention، 8 رؤوس — مواصفات كاملة بتوثيق سطر بسطر.</span><span class="en">Embedding model interface: 21.7M params, 768-d, 4 Attention layers, 8 heads — full specification with line-by-line documentation.</span></p>
+            <div class="repo-stats"><span>21,765,123 params</span><span>Matryoshka</span><span>ONNX</span></div>
+        </a>
+        <a href="https://github.com/sbay-dev/sarmadAi/tree/main/src/Sarmad.DMPS" target="_blank" class="repo-card rc2 reveal reveal-delay-3">
+            <div class="rb">🤖 <span class="ar">الوكلاء</span><span class="en">Agents</span></div>
+            <h3><span class="ar">DMPS — تنسيق الموفّرين</span><span class="en">DMPS — Provider Orchestration</span></h3>
+            <p><span class="ar">نظام ديناميكي موحّد لموفّري النماذج: Ollama محلي، Azure سحابي، ONNX طرفي — واجهة واحدة لكل شيء.</span><span class="en">Dynamic unified model provider system: local Ollama, cloud Azure, edge ONNX — one interface for everything.</span></p>
+            <div class="repo-stats"><span>IModelProvider.cs</span><span>28 Controllers</span><span>.NET</span></div>
+        </a>
+        <a href="https://github.com/sbay-dev/sarmadAi/tree/main/paper" target="_blank" class="repo-card rc2 reveal reveal-delay-4">
+            <div class="rb">📄 <span class="ar">الأوراق</span><span class="en">Papers</span></div>
+            <h3><span class="ar">الأوراق العلمية</span><span class="en">Scientific Papers</span></h3>
+            <p><span class="ar">مواصفات النموذج الكاملة، برهان تكافؤ ONNX الرياضي، معمارية DMPS — توثيق بمستوى أكاديمي.</span><span class="en">Full model specification, ONNX mathematical parity proof, DMPS architecture — university-grade documentation.</span></p>
+            <div class="repo-stats"><span>cns-model-spec</span><span>onnx-parity-proof</span><span>dmps-arch</span></div>
         </a>
     </div>
 </section>
@@ -536,8 +550,8 @@ body.lang-ar .btn{font-weight:600}
     <h2 class="reveal"><span class="ar">ابدأ مع <span class="glow-text">سرمد</span> اليوم</span><span class="en">Start with <span class="glow-text">Sarmad</span> Today</span></h2>
     <p class="reveal"><span class="ar">أول نموذج ذكاء اصطناعي عربي مبني على شبكة المكعبات الإحصائية — مفتوح المصدر بالكامل</span><span class="en">The first Arabic AI model built on Cubic Neural Statistics — fully open source</span></p>
     <div class="cta-buttons reveal">
-        <a href="https://github.com/sbay-dev/CNSEmbedding" class="btn btn-neural" target="_blank">🧠 <span class="ar">استكشف CNSEmbedding</span><span class="en">Explore CNSEmbedding</span></a>
-        <a href="https://github.com/sbay-dev/MVCServerAI" class="btn btn-ghost" target="_blank">🤖 <span class="ar">استكشف MVCServerAI</span><span class="en">Explore MVCServerAI</span></a>
+        <a href="https://github.com/sbay-dev/sarmadAi" class="btn btn-neural" target="_blank">🧠 <span class="ar">استكشف المستودع</span><span class="en">Explore Repository</span></a>
+        <a href="https://github.com/sbay-dev/sarmadAi/tree/main/paper" class="btn btn-ghost" target="_blank">📄 <span class="ar">الأوراق العلمية</span><span class="en">Scientific Papers</span></a>
     </div>
 </section>
 
@@ -545,8 +559,8 @@ body.lang-ar .btn{font-weight:600}
 <div class="footer-inner">
     <div class="footer-tech"><span>PyTorch</span><span>ONNX</span><span>CNS 12D</span><span>768-d</span><span>Pre-Norm</span><span>.NET</span><span>MCP</span><span>sarmad.cli</span><span>Apache-2.0</span></div>
     <ul class="footer-nav">
-        <li><a href="https://github.com/sbay-dev/CNSEmbedding" target="_blank">CNSEmbedding</a></li>
-        <li><a href="https://github.com/sbay-dev/MVCServerAI" target="_blank">MVCServerAI</a></li>
+        <li><a href="https://github.com/sbay-dev/sarmadAi/tree/main/src" target="_blank"><span class="ar">المصدر</span><span class="en">Source</span></a></li>
+        <li><a href="https://github.com/sbay-dev/sarmadAi/tree/main/paper" target="_blank"><span class="ar">الأوراق</span><span class="en">Papers</span></a></li>
         <li><a href="https://github.com/sbay-dev/EntityCrypt" target="_blank">EntityCrypt</a></li>
         <li><a href="https://github.com/sbay-dev" target="_blank">sbay-dev</a></li>
     </ul>
