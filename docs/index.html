@@ -104,6 +104,25 @@ body.lang-en .cns-dim:hover{transform:translateX(4px)}
 .cns-dim .dim-icon{font-size:1rem}
 #cube-canvas{width:100%;max-width:420px;height:420px;display:block;margin:0 auto}
 
+/* ═══ INVESTMENT CUBE ═══ */
+#investment-cube{padding:4rem 0}
+.cube-viz{max-width:900px;margin:0 auto;padding:0 1.5rem}
+.cube-controls{display:flex;gap:.6rem;flex-wrap:wrap;justify-content:center;margin-bottom:1.5rem}
+.cube-btn{padding:.55rem 1.2rem;border:1px solid var(--border);border-radius:10px;background:rgba(10,31,58,.6);color:var(--text-dim);font-size:.8rem;font-weight:600;cursor:pointer;transition:all .3s;font-family:inherit;display:flex;align-items:center;gap:.4rem}
+.cube-btn:hover{border-color:var(--border-glow);color:var(--text)}
+.cube-btn-active{border-color:var(--neural);color:var(--neural);background:rgba(0,200,255,.08)}
+.cube-count{font-size:.65rem;background:rgba(255,255,255,.08);padding:.15rem .45rem;border-radius:6px;font-weight:400}
+.cube-stage-wrap{position:relative;border:1px solid var(--border);border-radius:18px;background:linear-gradient(135deg,rgba(4,16,32,.9),rgba(10,31,58,.6));overflow:hidden}
+.cube-stage{width:100%;height:520px;display:block;cursor:grab;touch-action:none}
+.cube-stage:active{cursor:grabbing}
+.cube-tip{position:absolute;pointer-events:none;background:rgba(4,16,32,.92);border:1px solid var(--neural);border-radius:10px;padding:.6rem 1rem;font-size:.78rem;color:var(--text);opacity:0;transition:opacity .15s;backdrop-filter:blur(12px);z-index:10;white-space:nowrap;direction:rtl;unicode-bidi:plaintext}
+body.lang-en .cube-tip{direction:ltr}
+.cube-tip b{color:var(--neural)}
+.cube-tip .ct-pol{display:inline-block;width:8px;height:8px;border-radius:50%;margin-inline-end:.35rem}
+.cube-legend{display:flex;justify-content:center;gap:2rem;margin-top:1.2rem;flex-wrap:wrap}
+.cube-stat{display:flex;flex-direction:column;align-items:center;gap:.2rem;font-size:.75rem;color:var(--text-dim)}
+.cube-stat-val{font-size:1.6rem;font-weight:800;color:var(--neural);font-family:var(--mono)}
+
 /* ═══ FEATURES ═══ */
 .features-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.4rem}
 .feat{background:linear-gradient(135deg,rgba(10,31,58,.8),rgba(4,16,32,.6));border:1px solid var(--border);border-radius:20px;padding:2rem 1.6rem;transition:all .4s;position:relative;overflow:hidden}
@@ -249,6 +268,9 @@ body.lang-ar .btn{font-weight:600}
 .hamburger{display:block}
 #bloom-canvas{height:200px}
 #glyph-field{font-size:9px;padding:1rem .5rem}
+.cube-stage{height:380px}
+.cube-legend{gap:1rem}
+.cube-stat-val{font-size:1.2rem}
 }
 </style>
 </head>
@@ -498,6 +520,35 @@ body.lang-ar .btn{font-weight:600}
         <p><span class="ar">مفاهيم عربية حقيقية تتحرك في الفضاء الدلالي — كل نقطة مفهوم، كل خط علاقة</span><span class="en">Real Arabic concepts moving in semantic space — each dot a concept, each line a relationship</span></p>
     </div>
     <canvas id="concept-canvas" class="reveal"></canvas>
+</section>
+
+<!-- NORMATIVE CNS CUBE — K₁₂ Investment Space -->
+<section id="investment-cube">
+    <div class="sec-header reveal">
+        <span class="sec-tag">🧊 <span class="ar">المكعب النظامي</span><span class="en">Normative Cube</span></span>
+        <div class="sec-divider"></div>
+        <h2><span class="ar">فضاء الاستثمار K₁₂ — مكعب CNS تفاعلي</span><span class="en">Investment Space K₁₂ — Interactive CNS Cube</span></h2>
+        <p><span class="ar">المكعب المعتمد ببيانات اعتبارية — 148 عقدة × 12 بُعد · إسقاط ثلاثي الأبعاد مباشر · كل عقدة مفهوم استثماري مرمّز في الفضاء الدلالي</span><span class="en">Normative cube with consideration data — 148 nodes × 12 dimensions · live 3D projection · each node an investment concept encoded in semantic space</span></p>
+    </div>
+    <div class="cube-viz reveal">
+        <div class="cube-controls">
+            <button class="cube-btn cube-btn-active" data-filter="all"><span class="ar">الكل</span><span class="en">All</span> <span class="cube-count">31</span></button>
+            <button class="cube-btn" data-filter="positive" style="--btn-col:#34d399"><span class="ar">إيجابي</span><span class="en">Positive</span> <span class="cube-count">12</span></button>
+            <button class="cube-btn" data-filter="negative" style="--btn-col:#fb7185"><span class="ar">سلبي</span><span class="en">Negative</span> <span class="cube-count">9</span></button>
+            <button class="cube-btn" data-filter="neutral" style="--btn-col:#94a3b8"><span class="ar">محايد</span><span class="en">Neutral</span> <span class="cube-count">10</span></button>
+            <button class="cube-btn" data-filter="rotate">⟳</button>
+        </div>
+        <div class="cube-stage-wrap">
+            <canvas id="inv-cube" class="cube-stage"></canvas>
+            <div id="cube-tooltip" class="cube-tip"></div>
+        </div>
+        <div class="cube-legend">
+            <div class="cube-stat"><span class="cube-stat-val">148</span><span class="ar">عقدة أصلية</span><span class="en">Original Nodes</span></div>
+            <div class="cube-stat"><span class="cube-stat-val">12</span><span class="ar">بُعد دلالي</span><span class="en">Semantic Dims</span></div>
+            <div class="cube-stat"><span class="cube-stat-val">768</span><span class="ar">بُعد التضمين</span><span class="en">Embedding Dims</span></div>
+            <div class="cube-stat"><span class="cube-stat-val">±1</span><span class="ar">قطبية</span><span class="en">Polarity</span></div>
+        </div>
+    </div>
 </section>
 
 <!-- REPOS -->
@@ -797,6 +848,280 @@ function draw(){
 
     requestAnimationFrame(draw);
 }
+draw();
+})();
+
+// ═══ NORMATIVE CNS CUBE — Investment K₁₂ ═══
+(function(){
+const cv=document.getElementById('inv-cube');if(!cv)return;
+const ctx=cv.getContext('2d');
+const tip=document.getElementById('cube-tooltip');
+let W,H,dpr;
+
+function resize(){
+    const r=cv.getBoundingClientRect();
+    dpr=devicePixelRatio||1;
+    W=cv.width=r.width*dpr;H=cv.height=r.height*dpr;
+    ctx.scale(dpr,dpr);
+}
+resize();addEventListener('resize',resize);
+
+// Investment concept nodes mapped to CNS 12D coordinates
+// Structure mirrors the normative K₁₂ cube: polarity axis (z), semantic spread (x,y)
+const NODES=[
+    // ── Positive (polarity > 0) ──
+    {ar:'عائد',en:'Return',pol:.9,cat:'positive',cx:[.8,.7,.3,.5,.4,.2,.9,.3,.6,.5,.7,.8]},
+    {ar:'نمو',en:'Growth',pol:.85,cat:'positive',cx:[.7,.6,.5,.6,.5,.3,.8,.2,.7,.4,.8,.9]},
+    {ar:'ربحية',en:'Profitability',pol:.8,cat:'positive',cx:[.6,.5,.2,.4,.3,.1,.95,.4,.5,.6,.5,.7]},
+    {ar:'استقرار',en:'Stability',pol:.75,cat:'positive',cx:[.5,.4,.4,.7,.6,.5,.6,.6,.3,.8,.3,.5]},
+    {ar:'تنويع',en:'Diversification',pol:.7,cat:'positive',cx:[.4,.8,.3,.5,.7,.4,.5,.3,.8,.3,.6,.6]},
+    {ar:'سيولة',en:'Liquidity',pol:.65,cat:'positive',cx:[.3,.3,.2,.3,.2,.1,.85,.5,.4,.7,.4,.4]},
+    {ar:'ابتكار',en:'Innovation',pol:.9,cat:'positive',cx:[.9,.9,.7,.6,.4,.8,.7,.1,.9,.2,.95,.85]},
+    {ar:'قيمة',en:'Value',pol:.8,cat:'positive',cx:[.7,.6,.4,.5,.5,.3,.75,.4,.5,.6,.6,.6]},
+    {ar:'فرصة',en:'Opportunity',pol:.85,cat:'positive',cx:[.8,.7,.6,.4,.3,.5,.65,.2,.7,.3,.8,.7]},
+    {ar:'أصول',en:'Assets',pol:.6,cat:'positive',cx:[.5,.4,.3,.6,.5,.2,.7,.7,.4,.8,.3,.5]},
+    {ar:'تمويل',en:'Funding',pol:.7,cat:'positive',cx:[.6,.5,.4,.5,.4,.3,.8,.3,.5,.5,.5,.6]},
+    {ar:'استدامة',en:'Sustainability',pol:.75,cat:'positive',cx:[.5,.6,.7,.7,.8,.6,.5,.5,.6,.4,.7,.9]},
+    // ── Negative (polarity < 0) ──
+    {ar:'مخاطرة',en:'Risk',pol:-.7,cat:'negative',cx:[.6,.5,.4,.3,.3,.2,.4,.3,.5,.4,.3,.5]},
+    {ar:'خسارة',en:'Loss',pol:-.9,cat:'negative',cx:[.2,.3,.2,.2,.1,.1,.1,.4,.3,.5,.2,.3]},
+    {ar:'ركود',en:'Recession',pol:-.8,cat:'negative',cx:[.3,.2,.3,.4,.2,.2,.15,.6,.2,.6,.1,.2]},
+    {ar:'تضخم',en:'Inflation',pol:-.65,cat:'negative',cx:[.4,.3,.3,.3,.3,.2,.3,.5,.4,.5,.3,.4]},
+    {ar:'ديون',en:'Debt',pol:-.75,cat:'negative',cx:[.3,.2,.2,.3,.2,.1,.2,.5,.3,.6,.2,.3]},
+    {ar:'إفلاس',en:'Bankruptcy',pol:-.95,cat:'negative',cx:[.1,.1,.1,.1,.1,.1,.05,.6,.2,.7,.1,.1]},
+    {ar:'تقلب',en:'Volatility',pol:-.5,cat:'negative',cx:[.5,.4,.5,.3,.4,.3,.5,.3,.5,.4,.4,.5]},
+    {ar:'انكماش',en:'Contraction',pol:-.7,cat:'negative',cx:[.3,.3,.2,.4,.2,.2,.2,.5,.3,.5,.2,.3]},
+    {ar:'فقاعة',en:'Bubble',pol:-.85,cat:'negative',cx:[.7,.6,.3,.2,.1,.1,.8,.1,.6,.2,.5,.3]},
+    // ── Neutral (polarity ≈ 0) ──
+    {ar:'سوق',en:'Market',pol:.05,cat:'neutral',cx:[.5,.5,.4,.5,.5,.4,.5,.4,.5,.5,.5,.5]},
+    {ar:'محفظة',en:'Portfolio',pol:.1,cat:'neutral',cx:[.5,.5,.3,.5,.5,.3,.6,.5,.5,.5,.5,.5]},
+    {ar:'سهم',en:'Stock',pol:.0,cat:'neutral',cx:[.5,.4,.3,.4,.4,.3,.5,.4,.4,.5,.4,.5]},
+    {ar:'صندوق',en:'Fund',pol:.05,cat:'neutral',cx:[.5,.5,.4,.5,.5,.4,.55,.5,.5,.5,.5,.5]},
+    {ar:'مؤشر',en:'Index',pol:.0,cat:'neutral',cx:[.5,.5,.5,.5,.5,.5,.5,.5,.5,.5,.5,.5]},
+    {ar:'عملة',en:'Currency',pol:-.05,cat:'neutral',cx:[.4,.4,.3,.4,.4,.3,.5,.4,.4,.5,.4,.4]},
+    {ar:'سند',en:'Bond',pol:.1,cat:'neutral',cx:[.4,.3,.3,.5,.4,.3,.55,.6,.3,.6,.3,.4]},
+    {ar:'أرباح',en:'Earnings',pol:.15,cat:'neutral',cx:[.6,.5,.3,.5,.4,.3,.65,.4,.5,.5,.5,.5]},
+    {ar:'رأسمال',en:'Capital',pol:.0,cat:'neutral',cx:[.5,.5,.4,.5,.5,.4,.5,.5,.5,.5,.5,.5]},
+    {ar:'استثمار',en:'Investment',pol:.1,cat:'neutral',cx:[.6,.6,.5,.5,.5,.4,.6,.4,.5,.4,.6,.6]},
+];
+
+// Project 12D → 3D via PCA-like fixed projection
+// Dimensions: [Bio,Intel,Emot,Social,Cultural,Political,Economic,Spiritual,Physical,Mental,Creative,Temporal]
+// X ← Economic(6) + Creative(10) − Spiritual(7)
+// Y ← Intellectual(1) + Cultural(4) − Physical(8)
+// Z ← Polarity (direct mapping)
+function to3D(n){
+    const c=n.cx;
+    return{
+        x:(c[6]*1.2+c[10]*0.6-c[7]*0.5-0.5)*1.4,
+        y:(c[1]*0.8+c[4]*0.6-c[8]*0.5-0.3)*1.4,
+        z:n.pol
+    };
+}
+
+NODES.forEach(n=>{const p=to3D(n);n.x=p.x;n.y=p.y;n.z=p.z;});
+
+const CAT_COL={positive:'#34d399',negative:'#fb7185',neutral:'#94a3b8'};
+function hexA(hex,a){const r=parseInt(hex.slice(1,3),16),g=parseInt(hex.slice(3,5),16),b=parseInt(hex.slice(5,7),16);return'rgba('+r+','+g+','+b+','+a+')';}
+
+let rotX=0.45,rotY=0.6,autoRot=true,filter='all';
+let dragX=0,dragY=0,dragging=false,lastMX=0,lastMY=0;
+let hoverIdx=-1;
+
+// 3D projection
+function proj(px,py,pz){
+    const cx=Math.cos(rotX),sx=Math.sin(rotX),cy=Math.cos(rotY),sy=Math.sin(rotY);
+    const y1=py*cx-pz*sx,z1=py*sx+pz*cx;
+    const x1=px*cy+z1*sy,z2=-px*sy+z1*cy;
+    const bw=cv.clientWidth,bh=cv.clientHeight;
+    const sc=Math.min(bw,bh)*0.32;
+    const s=800/(800+z2*200);
+    return{x:bw/2+x1*sc*s,y:bh/2+y1*sc*s,s:s,z:z2};
+}
+
+// Cube wireframe vertices & edges
+const CV=[[-1,-1,-1],[1,-1,-1],[1,1,-1],[-1,1,-1],[-1,-1,1],[1,-1,1],[1,1,1],[-1,1,1]];
+const ED=[[0,1],[1,2],[2,3],[3,0],[4,5],[5,6],[6,7],[7,4],[0,4],[1,5],[2,6],[3,7]];
+
+// Axis labels
+const AXES=[
+    {from:[1.15,0,0],to:[-1.15,0,0],ar:'اقتصادي ←→ روحي',en:'Economic ←→ Spiritual'},
+    {from:[0,1.15,0],to:[0,-1.15,0],ar:'فكري ←→ جسدي',en:'Intellectual ←→ Physical'},
+    {from:[0,0,1.15],to:[0,0,-1.15],ar:'إيجابي ←→ سلبي',en:'Positive ←→ Negative'}
+];
+
+function draw(){
+    const bw=cv.clientWidth,bh=cv.clientHeight;
+    ctx.clearRect(0,0,bw,bh);
+
+    if(autoRot){rotY+=0.004;rotX+=0.0015;}
+
+    // Cube wireframe
+    const pv=CV.map(v=>proj(v[0],v[1],v[2]));
+    ctx.lineWidth=1;
+    ED.forEach(([a,b])=>{
+        ctx.beginPath();ctx.moveTo(pv[a].x,pv[a].y);ctx.lineTo(pv[b].x,pv[b].y);
+        ctx.strokeStyle='rgba(0,200,255,.12)';ctx.stroke();
+    });
+
+    // Grid lines inside cube
+    for(let i=-1;i<=1;i+=0.5){
+        const a=proj(i,-1,-1),b=proj(i,1,1);
+        ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y);
+        ctx.strokeStyle='rgba(0,200,255,.03)';ctx.lineWidth=.5;ctx.stroke();
+    }
+
+    // Polarity plane at z=0
+    const pp=[proj(-1,-1,0),proj(1,-1,0),proj(1,1,0),proj(-1,1,0)];
+    ctx.beginPath();ctx.moveTo(pp[0].x,pp[0].y);
+    pp.slice(1).forEach(p=>ctx.lineTo(p.x,p.y));ctx.closePath();
+    ctx.fillStyle='rgba(0,200,255,.02)';ctx.fill();
+    ctx.strokeStyle='rgba(0,200,255,.08)';ctx.lineWidth=1;ctx.stroke();
+
+    // Axis labels
+    ctx.font='600 10px "JetBrains Mono",monospace';ctx.textAlign='center';
+    AXES.forEach(ax=>{
+        const pf=proj(...ax.from);
+        const isAr=document.body.classList.contains('lang-ar')||!document.body.classList.contains('lang-en');
+        ctx.fillStyle='rgba(0,200,255,.35)';
+        ctx.fillText(isAr?ax.ar:ax.en,pf.x,pf.y-6);
+    });
+
+    // Filter & project nodes
+    const visible=NODES.filter(n=>filter==='all'||n.cat===filter);
+    const projected=visible.map((n,i)=>{
+        const p=proj(n.x,n.y,n.z);
+        return{...p,node:n,vi:i};
+    });
+
+    // Connection lines between nearby nodes
+    ctx.lineWidth=0.5;
+    for(let i=0;i<projected.length;i++){
+        for(let j=i+1;j<projected.length;j++){
+            const dx=projected[i].x-projected[j].x,dy=projected[i].y-projected[j].y;
+            const d=Math.sqrt(dx*dx+dy*dy);
+            if(d<80){
+                const same=projected[i].node.cat===projected[j].node.cat;
+                const a=(1-d/80)*(same?.18:.06);
+                const col=same?CAT_COL[projected[i].node.cat]:'#00c8ff';
+                ctx.beginPath();ctx.moveTo(projected[i].x,projected[i].y);ctx.lineTo(projected[j].x,projected[j].y);
+                ctx.strokeStyle=hexA(col,a);
+                ctx.stroke();
+            }
+        }
+    }
+
+    // Sort by depth
+    projected.sort((a,b)=>a.z-b.z);
+
+    // Draw nodes
+    const isAr=document.body.classList.contains('lang-ar')||!document.body.classList.contains('lang-en');
+    projected.forEach((p,idx)=>{
+        const n=p.node;
+        const col=CAT_COL[n.cat];
+        const sz=4*p.s;
+        const isHover=(hoverIdx===NODES.indexOf(n));
+
+        // Glow
+        if(isHover){
+            ctx.beginPath();ctx.arc(p.x,p.y,sz*5,0,6.28);
+            const g=ctx.createRadialGradient(p.x,p.y,0,p.x,p.y,sz*5);
+            g.addColorStop(0,hexA(col,0.25));
+            g.addColorStop(1,'transparent');
+            ctx.fillStyle=g;ctx.fill();
+        }
+
+        // Outer glow ring
+        ctx.beginPath();ctx.arc(p.x,p.y,sz*2.5,0,6.28);
+        ctx.fillStyle=hexA(col,0.04);
+        ctx.fill();
+
+        // Node dot
+        ctx.beginPath();ctx.arc(p.x,p.y,sz,0,6.28);
+        ctx.globalAlpha=0.4+p.s*0.5;
+        ctx.fillStyle=col;ctx.fill();
+        ctx.globalAlpha=1;
+
+        if(isHover){
+            ctx.strokeStyle=col;ctx.lineWidth=2;ctx.stroke();
+        }
+
+        // Label
+        const label=isAr?n.ar:n.en;
+        ctx.font=(isHover?'700 ':'600 ')+(isHover?'13':'10')+'px '+(isAr?'"Tajawal",':'')+'"JetBrains Mono",sans-serif';
+        ctx.fillStyle=isHover?'#fff':'rgba(255,255,255,'+(0.4+p.s*0.4)+')';
+        ctx.textAlign='center';
+        ctx.fillText(label,p.x,p.y-sz-5);
+    });
+
+    // Footer label
+    ctx.font='600 11px "JetBrains Mono",monospace';
+    ctx.fillStyle='rgba(0,200,255,0.3)';ctx.textAlign='center';
+    ctx.fillText(isAr?'فضاء الاستثمار K₁₂ — إسقاط ثلاثي الأبعاد':'Investment Space K₁₂ — 3D Projection',bw/2,bh-14);
+
+    requestAnimationFrame(draw);
+}
+
+// Mouse interaction
+cv.addEventListener('mousedown',e=>{dragging=true;autoRot=false;lastMX=e.clientX;lastMY=e.clientY;cv.style.cursor='grabbing';});
+addEventListener('mousemove',e=>{
+    if(dragging){rotY+=(e.clientX-lastMX)*0.008;rotX+=(e.clientY-lastMY)*0.008;lastMX=e.clientX;lastMY=e.clientY;return;}
+    // Hover detection
+    const rect=cv.getBoundingClientRect();
+    const mx=e.clientX-rect.left,my=e.clientY-rect.top;
+    let closest=-1,minD=Infinity;
+    const isAr=document.body.classList.contains('lang-ar')||!document.body.classList.contains('lang-en');
+    const visible=NODES.filter(n=>filter==='all'||n.cat===filter);
+    visible.forEach((n,i)=>{
+        const p=proj(n.x,n.y,n.z);
+        const d=Math.hypot(p.x-mx,p.y-my);
+        if(d<25&&d<minD){minD=d;closest=NODES.indexOf(n);}
+    });
+    hoverIdx=closest;
+    if(closest>=0){
+        const n=NODES[closest];
+        const dims=['حيوي','فكري','عاطفي','اجتماعي','ثقافي','سياسي','اقتصادي','روحي','جسدي','ذهني','إبداعي','زمني'];
+        const dimsEn=['Bio','Intel','Emot','Social','Cultural','Political','Economic','Spiritual','Physical','Mental','Creative','Temporal'];
+        const topDims=n.cx.map((v,i)=>({v,i})).sort((a,b)=>b.v-a.v).slice(0,3);
+        const polCol=n.pol>0?'#34d399':n.pol<0?'#fb7185':'#94a3b8';
+        tip.innerHTML='<b>'+(isAr?n.ar:n.en)+'</b> <span style="opacity:.6">('+(isAr?n.en:n.ar)+')</span><br>'
+            +'<span class="ct-pol" style="background:'+polCol+'"></span>'
+            +(isAr?'قطبية':'Pol')+': '+n.pol.toFixed(2)+'<br>'
+            +'<span style="opacity:.6">'+(isAr?'أعلى أبعاد':'Top dims')+': '
+            +topDims.map(d=>(isAr?dims[d.i]:dimsEn[d.i])+'='+d.v.toFixed(1)).join(' · ')+'</span>';
+        tip.style.opacity='1';
+        tip.style.left=Math.min(mx+15,rect.width-tip.offsetWidth-10)+'px';
+        tip.style.top=(my-tip.offsetHeight-10)+'px';
+        cv.style.cursor='pointer';
+    } else {
+        tip.style.opacity='0';cv.style.cursor='grab';
+    }
+});
+addEventListener('mouseup',()=>{dragging=false;cv.style.cursor='grab';});
+
+// Touch
+let touchId=null;
+cv.addEventListener('touchstart',e=>{
+    if(e.touches.length===1){dragging=true;autoRot=false;touchId=e.touches[0].identifier;lastMX=e.touches[0].clientX;lastMY=e.touches[0].clientY;}
+},{passive:true});
+cv.addEventListener('touchmove',e=>{
+    if(!dragging)return;
+    for(const t of e.touches){if(t.identifier===touchId){rotY+=(t.clientX-lastMX)*0.008;rotX+=(t.clientY-lastMY)*0.008;lastMX=t.clientX;lastMY=t.clientY;break;}}
+},{passive:true});
+cv.addEventListener('touchend',()=>{dragging=false;touchId=null;});
+
+// Controls
+document.querySelectorAll('.cube-btn').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+        const f=btn.dataset.filter;
+        if(f==='rotate'){autoRot=!autoRot;btn.classList.toggle('cube-btn-active',autoRot);return;}
+        filter=f;
+        document.querySelectorAll('.cube-btn[data-filter]').forEach(b=>{
+            if(b.dataset.filter!=='rotate')b.classList.toggle('cube-btn-active',b.dataset.filter===f);
+        });
+    });
+});
+
 draw();
 })();
 
