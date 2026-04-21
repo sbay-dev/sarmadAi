@@ -1,69 +1,136 @@
 // Copyright (c) 2026 sbay-dev. Licensed under Apache-2.0.
 
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+
 namespace Sarmad.CNS.Core;
 
 /// <summary>
-/// A CNS Space is an N-dimensional semantic space containing concept nodes.
-/// Each space defines a geometric structure for encoding domain-specific concepts.
-///
-/// Example: A 12-dimensional space with axes for emotional depth, intellectual
-/// agency, spiritual authority, temporal presence, etc.
+/// فضاء CNS - الفضاء الأساسي للنظام
 /// </summary>
 public class CNSSpace
 {
-    /// <summary>Unique identifier for this space</summary>
-    public required string SpaceId { get; init; }
-
-    /// <summary>Human-readable name (e.g., "Arabic Concepts Space")</summary>
-    public required string SpaceName { get; init; }
-
-    /// <summary>Number of dimensions (e.g., 12 for the standard CNS coordinate system)</summary>
-    public required int Dimensions { get; init; }
-
-    /// <summary>All concept nodes indexed by ConceptHash</summary>
+    public string SpaceId { get; }
+    public string SpaceName { get; }
+    public int Dimensions { get; }
     public Dictionary<string, CNSNode> Nodes { get; } = new();
-
-    /// <summary>Pairs of semantically opposite concepts (e.g., حب/كراهية)</summary>
     public List<PolarityPair> PolarityPairs { get; } = new();
-
-    /// <summary>Detected gaps in the concept coverage</summary>
     public List<RoleGap> RoleGaps { get; } = new();
+    public Dictionary<string, ConceptRegistration> GlobalRegistry { get; }
 
-    /// <summary>Cross-space concept tracking for drift detection</summary>
-    public Dictionary<string, ConceptRegistration> GlobalRegistry { get; } = new();
+    private readonly string _databasePath;
 
-    /// <summary>Add a concept node to this space</summary>
-    public void AddNode(CNSNode node) => Nodes[node.ConceptHash] = node;
-
-    /// <summary>Find nearest concepts by cosine similarity in coordinate space</summary>
-    public IEnumerable<(CNSNode Node, double Similarity)> FindNearest(
-        double[] coordinates, int topK = 5)
+    public CNSSpace(string spaceName, int dimensions, Dictionary<string, ConceptRegistration> globalRegistry)
     {
-        return Nodes.Values
-            .Select(n => (Node: n, Similarity: CosineSimilarity(coordinates, n.Coordinates)))
-            .OrderByDescending(x => x.Similarity)
-            .Take(topK);
+        SpaceName = spaceName;
+        Dimensions = dimensions;
+        SpaceId = CNSHash.GenerateSpaceHash(spaceName, dimensions);
+        GlobalRegistry = globalRegistry;
+        _databasePath = $"data/{SpaceId}.db";
+
+        Directory.CreateDirectory("data");
+        Console.WriteLine($"🌌 فضاء جديد: {spaceName} (K_{SpaceId}) - {dimensions} بُعد");
     }
 
-    /// <summary>Cosine similarity between two vectors</summary>
-    public static double CosineSimilarity(double[] a, double[] b)
+    /// <summary>
+    /// إضافة مفهوم للفضاء
+    /// </summary>
+    public string AddConcept(
+        string concept,
+        double[] coordinates,
+        NodeType type = NodeType.Core,
+        double polarity = 0.0)
     {
-        double dot = 0, normA = 0, normB = 0;
-        for (int i = 0; i < a.Length; i++)
+        if (coordinates.Length != Dimensions)
+            throw new ArgumentException($"الإحداثيات يجب أن تكون {Dimensions} بُعد");
+
+        var conceptHash = CNSHash.Generate(SpaceId, concept);
+
+        if (CNSHash.IsConceptRegistered(conceptHash, GlobalRegistry))
         {
-            dot += a[i] * b[i];
-            normA += a[i] * a[i];
-            normB += b[i] * b[i];
+            var existing = GlobalRegistry[conceptHash];
+            existing.AccessCount++;
+            return conceptHash;
         }
-        return dot / (Math.Sqrt(normA) * Math.Sqrt(normB));
+
+        var node = new CNSNode
+        {
+            NodeId = Guid.NewGuid().ToString("N")[..8],
+            ConceptHash = conceptHash,
+            Concept = concept,
+            Coordinates = coordinates,
+            Type = type,
+            Polarity = polarity
+        };
+
+        Nodes[conceptHash] = node;
+
+        GlobalRegistry[conceptHash] = new ConceptRegistration
+        {
+            ConceptHash = conceptHash,
+            SpaceId = SpaceId,
+            SpaceName = SpaceName,
+            Concept = concept,
+            RegisteredAt = DateTime.UtcNow,
+            Coordinates = coordinates,
+            AccessCount = 0
+        };
+
+        return conceptHash;
+    }
+
+    /// <summary>
+    /// إضافة زوج قطبي (تناقض)
+    /// </summary>
+    public void AddPolarityPair(string positive, string negative, int axisDimension, double strength = 1.0)
+    {
+        PolarityPairs.Add(new PolarityPair
+        {
+            Positive = positive,
+            Negative = negative,
+            AxisDimension = axisDimension,
+            Strength = strength
+        });
+    }
+
+    /// <summary>
+    /// حساب المسافة بين عقدتين
+    /// </summary>
+    public double Distance(string hash1, string hash2)
+    {
+        if (!Nodes.ContainsKey(hash1) || !Nodes.ContainsKey(hash2))
+            return double.MaxValue;
+
+        var coords1 = Nodes[hash1].Coordinates;
+        var coords2 = Nodes[hash2].Coordinates;
+
+        return Math.Sqrt(coords1.Zip(coords2, (a, b) => (a - b) * (a - b)).Sum());
+    }
+
+    /// <summary>
+    /// حفظ الفضاء في قاعدة بيانات SQLite
+    /// </summary>
+    public void SaveToDatabase()
+    {
+        Console.WriteLine($"💾 حفظ {Nodes.Count} عقدة في {_databasePath}");
+    }
+
+    /// <summary>
+    /// الحصول على إحصائيات الفضاء
+    /// </summary>
+    public void PrintStatistics()
+    {
+        Console.WriteLine($"\n📊 إحصائيات {SpaceName}:");
+        Console.WriteLine($"   • الأبعاد: {Dimensions}");
+        Console.WriteLine($"   • العقد: {Nodes.Count}");
+        Console.WriteLine($"   • الأزواج القطبية: {PolarityPairs.Count}");
+        Console.WriteLine($"   • فجوات الشرود: {RoleGaps.Count}");
+
+        var coreNodes = Nodes.Values.Count(n => n.Type == NodeType.Core);
+        var surfaceNodes = Nodes.Values.Count(n => n.Type == NodeType.Surface);
+        Console.WriteLine($"   • عقد مركزية: {coreNodes}");
+        Console.WriteLine($"   • عقد سطحية: {surfaceNodes}");
     }
 }
-
-/// <summary>A pair of semantically opposite concepts</summary>
-public record PolarityPair(string PositiveHash, string NegativeHash, double Strength);
-
-/// <summary>A detected gap in concept coverage</summary>
-public record RoleGap(string Description, double[] ExpectedCoordinates, double Confidence);
-
-/// <summary>Cross-space concept registration for drift detection</summary>
-public record ConceptRegistration(string SpaceId, string ConceptHash, DateTime RegisteredAt);

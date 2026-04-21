@@ -1,49 +1,58 @@
 // Copyright (c) 2026 sbay-dev. Licensed under Apache-2.0.
 // Sarmad — Cubic Neural Statistics
 
+using System;
+using System.Collections.Generic;
+
 namespace Sarmad.CNS.Core;
 
 /// <summary>
-/// A concept node in CNS space. Each node represents a semantic concept
-/// as a point in N-dimensional geometric space with polarity metadata.
+/// عقدة في فضاء CNS
 /// </summary>
-public record CNSNode
+public class CNSNode
 {
-    /// <summary>SHA-256 based unique identifier: Hash(SpaceId + Concept)[0..16]</summary>
+    public required string NodeId { get; init; }
     public required string ConceptHash { get; init; }
-
-    /// <summary>Human-readable concept text (e.g., "رحمة", "إيمان")</summary>
     public required string Concept { get; init; }
-
-    /// <summary>N-dimensional coordinates in the CNS space (e.g., 12 dimensions)</summary>
     public required double[] Coordinates { get; init; }
-
-    /// <summary>Semantic polarity: -1.0 (negative) to +1.0 (positive)</summary>
-    public double Polarity { get; init; }
-
-    /// <summary>Cultural significance weight in context</summary>
-    public double CulturalWeight { get; init; } = 1.0;
-
-    /// <summary>Node classification type</summary>
-    public NodeType Type { get; init; } = NodeType.Core;
-
-    /// <summary>Semantically equivalent concepts</summary>
+    public required NodeType Type { get; init; }
+    public Dictionary<string, double> Neighbors { get; init; } = new();
+    public double Polarity { get; set; }
+    public List<string> Antonyms { get; init; } = new();
     public List<string> Synonyms { get; init; } = new();
+    public double CulturalWeight { get; set; } = 1.0;
+    public DateTime CreatedAt { get; init; } = DateTime.UtcNow;
+}
+
+public enum NodeType
+{
+    Core,
+    Surface,
+    Phantom,
+    Transition,
+    Irregular
 }
 
 /// <summary>
-/// Classification of concept nodes within a CNS space.
+/// زوج قطبي (تناقض)
 /// </summary>
-public enum NodeType
+public record PolarityPair
 {
-    /// <summary>Essential, foundational concept</summary>
-    Core,
-    /// <summary>Observable, measurable attribute</summary>
-    Surface,
-    /// <summary>Implied or inferred concept (not directly observed)</summary>
-    Phantom,
-    /// <summary>Concept that evolves across contexts</summary>
-    Transition,
-    /// <summary>Exception or anomaly in the space</summary>
-    Irregular
+    public required string Positive { get; init; }
+    public required string Negative { get; init; }
+    public required int AxisDimension { get; init; }
+    public double Strength { get; init; } = 1.0;
+}
+
+/// <summary>
+/// فجوة بين الأدوار (للشرود)
+/// </summary>
+public record RoleGap
+{
+    public required string GapId { get; init; }
+    public required string SourceRole { get; init; }
+    public required string TargetRole { get; init; }
+    public required string[] TransitionConcepts { get; init; }
+    public required double TransitionProbability { get; init; }
+    public string? TargetSpaceId { get; init; }
 }
