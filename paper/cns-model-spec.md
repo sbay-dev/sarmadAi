@@ -136,14 +136,14 @@ Each concept in CNS space is located by 12 semantic coordinates. These axes were
 | 4 | Social Status | المكانة الاجتماعية | [0, 1] | Position within social hierarchies and community structures |
 | 5 | Cultural Role | الدور الثقافي | [0, 1] | Significance within cultural traditions and practices |
 | 6 | Political Power | السلطة السياسية | [0, 1] | Influence in governance, authority, and political systems |
-| 7 | Economic Control | التحكم الاقتصادي | [-1, +1] | Economic influence; negative values denote economic vulnerability |
+| 7 | Financial Control | التحكم الاقتصادي | [-1, +1] | Financial influence; negative values denote financial vulnerability |
 | 8 | Spiritual Authority | السلطة الروحية | [0, 1] | Connection to spiritual, religious, or metaphysical domains |
 | 9 | Physical Strength | القوة الجسدية | [0, 1] | Physical capability, endurance, or material presence |
 | 10 | Mental Resilience | المرونة الذهنية | [0, 1] | Psychological fortitude, adaptability, and perseverance |
 | 11 | Creative Expression | التعبير الإبداعي | [0, 1] | Capacity for artistic, literary, or innovative output |
 | 12 | Temporal Presence | الحضور الزمني | [0, 1] | Persistence across time; relevance in past, present, and future |
 
-> **Note:** Dimension 7 (Economic Control) is the only bipolar axis, using the range [-1, +1] to distinguish between economic empowerment (positive) and economic vulnerability (negative).
+> **Note:** Dimension 7 (Financial Control) is the only bipolar axis, using the range [-1, +1] to distinguish between financial empowerment (positive) and financial vulnerability (negative).
 
 ---
 
