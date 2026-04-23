@@ -19,7 +19,7 @@ This document establishes the numerical equivalence between the PyTorch implemen
 Let **f_pt** denote the PyTorch model function and **f_ox** denote the ONNX Runtime model function. For any valid input **x** ∈ ℝ^(B×13) (12 coordinates + 1 polarity value), we seek to demonstrate:
 
 $$
-/|f_{pt}(\mathbf{x}) - f_{ox}(\mathbf{x}) \|_{\infty} < \epsilon
+/| f_{pt}(\mathbf{x}) - f_{ox}(\mathbf{x}) \|_{\infty} < \epsilon
 $$
 
 where ε = 1 × 10⁻⁵ is the acceptable tolerance threshold for single-precision floating-point operations.
